@@ -1,43 +1,64 @@
 {
-  "name": "oasis",
-  "version": "0.1.0",
-  "description": "Oasis service for the Open Checkout Network (OCN)",
-  "capabilities": [
-    "getStatus",
-    "getTreasuryPlan"
-  ],
-  "endpoints": [
-    {
-      "method": "POST",
-      "path": "/mcp/invoke",
-      "description": "MCP protocol endpoint for Oasis service operations"
-    }
-  ],
-  "verbs": {
-    "getStatus": {
-      "description": "Get the current status of the Oasis agent",
-      "response_schema": {
-        "type": "object",
-        "properties": {
-          "ok": {"type": "boolean"},
-          "agent": {"type": "string"}
+    "name": "oasis",
+    "version": "0.1.0",
+    "description": "Oasis service for the Open Checkout Network (OCN)",
+    "capabilities": [
+        "getStatus",
+        "getTreasuryPlan"
+    ],
+    "endpoints": [
+        {
+            "method": "POST",
+            "path": "/mcp/invoke",
+            "description": "MCP protocol endpoint for Oasis service operations"
+        }
+    ],
+    "verbs": {
+        "getStatus": {
+            "description": "Get the current status of the Oasis agent",
+            "response_schema": {
+                "type": "object",
+                "properties": {
+                    "ok": {
+                        "type": "boolean"
+                    },
+                    "agent": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "ok",
+                    "agent"
+                ]
+            }
         },
-        "required": ["ok", "agent"]
-      }
-    },
-    "getTreasuryPlan": {
-      "description": "Get treasury management plan and configuration",
-      "response_schema": {
-        "type": "object",
-        "properties": {
-          "plan_id": {"type": "string"},
-          "plan_name": {"type": "string"},
-          "risk_tolerance": {"type": "string"},
-          "allocation": {"type": "object"},
-          "rebalancing_frequency": {"type": "string"}
-        },
-        "required": ["plan_id", "plan_name", "risk_tolerance"]
-      }
+        "getTreasuryPlan": {
+            "description": "Get treasury management plan and configuration",
+            "response_schema": {
+                "type": "object",
+                "properties": {
+                    "plan_id": {
+                        "type": "string"
+                    },
+                    "plan_name": {
+                        "type": "string"
+                    },
+                    "risk_tolerance": {
+                        "type": "string"
+                    },
+                    "allocation": {
+                        "type": "object"
+                    },
+                    "rebalancing_frequency": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "plan_id",
+                    "plan_name",
+                    "risk_tolerance"
+                ]
+            }
+        }
     }
-  }
 }

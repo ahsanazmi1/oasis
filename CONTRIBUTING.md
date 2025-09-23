@@ -69,4 +69,3 @@ When creating issues, please provide:
 - Steps to reproduce (for bugs)
 - Expected vs actual behavior
 - Environment details (OS, Python version, etc.)
-

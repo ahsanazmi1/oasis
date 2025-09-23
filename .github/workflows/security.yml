@@ -1,0 +1,77 @@
+name: Security
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pip-audit
+
+      - name: Run pip-audit on Python dependencies
+        run: |
+          echo "Running pip-audit on Python dependencies..."
+          pip-audit --desc --format=json --output=security-audit.json || true
+
+          # Also run with text output for visibility
+          pip-audit --desc
+
+      - name: Check for Dockerfile
+        id: check_dockerfile
+        run: |
+          if [ -f "Dockerfile" ]; then
+            echo "dockerfile_found=true" >> $GITHUB_OUTPUT
+          else
+            echo "dockerfile_found=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install Trivy
+        if: steps.check_dockerfile.outputs.dockerfile_found == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy
+
+      - name: Run Trivy filesystem scan
+        if: steps.check_dockerfile.outputs.dockerfile_found == 'true'
+        run: |
+          echo "Running Trivy filesystem scan..."
+          trivy fs . --format table --severity HIGH,CRITICAL
+
+      - name: Upload security audit results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: security-audit-results
+          path: |
+            security-audit.json
+            trivy-results.json
+        continue-on-error: true
+
+      - name: Security scan summary
+        run: |
+          echo "🔒 Security scan completed!"
+          echo "📊 Python dependency audit: pip-audit"
+          if [ -f "Dockerfile" ]; then
+            echo "🐳 Container security scan: Trivy"
+          else
+            echo "ℹ️  No Dockerfile found - skipping container security scan"
+          fi
