@@ -2,9 +2,9 @@ name: Security
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, phase-1-foundations]
   pull_request:
-    branches: [main, develop]
+    branches: [main, phase-1-foundations]
 
 jobs:
   security:
@@ -57,7 +57,7 @@ jobs:
           trivy fs . --format table --severity HIGH,CRITICAL
 
       - name: Upload security audit results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: security-audit-results
