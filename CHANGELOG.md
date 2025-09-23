@@ -21,3 +21,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Health check endpoint at `/health`
 - FastAPI application setup
 - Basic project structure and documentation
+

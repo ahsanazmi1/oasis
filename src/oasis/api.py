@@ -2,9 +2,16 @@
 FastAPI application for Oasis service.
 """
 
+import sys
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI
+
+# Add the project root to the Python path to import mcp
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+
+from mcp.server import mcp_router
 
 # Create FastAPI application
 app = FastAPI(
@@ -21,6 +28,9 @@ app = FastAPI(
         "url": "https://opensource.org/licenses/MIT",
     },
 )
+
+# Include MCP router
+app.include_router(mcp_router)
 
 
 @app.get("/health")
