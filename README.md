@@ -6,19 +6,68 @@
 
 Oasis is a minimal Python service for the [Open Checkout Network (OCN)](https://github.com/ahsanazmi1/ocn-common). It provides core functionality and serves as a foundation for building more complex services within the OCN ecosystem. Oasis follows modern Python development practices with FastAPI, comprehensive testing, and automated CI/CD workflows.
 
-## Quick Start
+## Quickstart (≤ 60s)
+
+Get up and running with Oasis OCN Agent in under a minute:
 
 ```bash
 # Clone the repository
 git clone https://github.com/ahsanazmi1/oasis.git
 cd oasis
 
+# Setup everything (venv, deps, pre-commit hooks)
+make setup
+
+# Run tests to verify everything works
+make test
+
+# Start the service
+make run
+```
+
+**That's it!** 🎉
+
+The service will be running at `http://localhost:8000`. Test the endpoints:
+
+```bash
+# Health check
+curl http://localhost:8000/health
+
+# MCP getStatus
+curl -X POST http://localhost:8000/mcp/invoke \
+  -H "Content-Type: application/json" \
+  -d '{"verb": "getStatus", "args": {}}'
+
+# MCP getTreasuryPlan
+curl -X POST http://localhost:8000/mcp/invoke \
+  -H "Content-Type: application/json" \
+  -d '{"verb": "getTreasuryPlan", "args": {}}'
+```
+
+### Additional Makefile Targets
+
+```bash
+make lint        # Run code quality checks
+make fmt         # Format code with black/ruff
+make clean       # Remove virtual environment and cache
+make help        # Show all available targets
+```
+
+## Manual Setup (Alternative)
+
+If you prefer manual setup over the Makefile:
+
+```bash
 # Create virtual environment
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Install dependencies
 pip install -e ".[dev]"
+
+# Install pre-commit hooks
+pip install pre-commit
+pre-commit install
 
 # Run tests
 pytest -q
@@ -29,7 +78,13 @@ uvicorn oasis.api:app --reload
 
 ## API Endpoints
 
+### Core Endpoints
 - `GET /health` - Health check endpoint
+
+### MCP (Model Context Protocol)
+- `POST /mcp/invoke` - MCP protocol endpoint for Oasis service operations
+  - `getStatus` - Get the current status of the Oasis agent
+  - `getTreasuryPlan` - Get treasury management plan and configuration
 
 ## Development
 
