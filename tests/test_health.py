@@ -2,7 +2,6 @@
 Tests for the health check endpoint.
 """
 
-import pytest
 from fastapi.testclient import TestClient
 
 from oasis.api import app
