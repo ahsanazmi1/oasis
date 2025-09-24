@@ -92,10 +92,87 @@ uvicorn oasis.api:app --reload
 ### Core Endpoints
 - `GET /health` - Health check endpoint
 
+### Treasury Planning
+- `POST /treasury/plan` - Generate deterministic treasury plan with 14-day liquidity forecast
+
+#### Treasury Planning Request Example
+```bash
+curl -X POST http://localhost:8000/treasury/plan \
+  -H "Content-Type: application/json" \
+  -d '{
+    "current_balance": 150000.0,
+    "risk_tolerance": "medium",
+    "expected_inflows": {
+      "multiplier": 1.2,
+      "events": [
+        {"day": 3, "amount": 25000},
+        {"day": 7, "amount": 15000}
+      ]
+    },
+    "expected_outflows": {
+      "multiplier": 0.9,
+      "events": [
+        {"day": 5, "amount": 10000}
+      ]
+    },
+    "vendor_payment_schedule": {
+      "upcoming_payments": [8000, 5000, 3000]
+    }
+  }'
+```
+
+#### Treasury Planning Response Example
+```json
+{
+  "forecast": [
+    {
+      "day": 1,
+      "date": "2024-01-15",
+      "inflow": 12000.0,
+      "outflow": 9000.0,
+      "net": 3000.0,
+      "balance": 153000.0,
+      "risk_level": "low"
+    }
+  ],
+  "buckets": {
+    "reserve": {
+      "amount": 22500.0,
+      "ratio": 0.15,
+      "purpose": "Emergency liquidity and regulatory requirements",
+      "target_min": 15000.0
+    },
+    "operating": {
+      "amount": 105000.0,
+      "ratio": 0.70,
+      "purpose": "Daily operations and working capital",
+      "target_min": 75000.0
+    },
+    "vendor": {
+      "amount": 22500.0,
+      "ratio": 0.15,
+      "purpose": "Vendor payments and scheduled obligations",
+      "upcoming_commitments": 16000.0
+    }
+  },
+  "notes": "Treasury planning analysis for $150,000.00 current balance:\n\n• 14-day forecast shows balance range: $145,000.00 - $165,000.00\n• Average projected balance: $155,000.00\n• Risk assessment: Low risk period - adequate liquidity maintained\n\nBucket allocation (risk tolerance: medium):\n• Reserve: $22,500.00 (15.0%)\n• Operating: $105,000.00 (70.0%)\n• Vendor: $22,500.00 (15.0%)\n\n✅ Recommendation: Current allocation appears optimal for risk tolerance",
+  "inputs": {
+    "current_balance": 150000.0,
+    "risk_tolerance": "medium",
+    "forecast_days": 14
+  },
+  "metadata": {
+    "generated_at": "2024-01-15T10:30:00Z",
+    "model_version": "1.0.0",
+    "seed": 42
+  }
+}
+```
+
 ### MCP (Model Context Protocol)
 - `POST /mcp/invoke` - MCP protocol endpoint for Oasis service operations
   - `getStatus` - Get the current status of the Oasis agent
-  - `getTreasuryPlan` - Get treasury management plan and configuration
+  - `getTreasuryPlan` - Generate deterministic treasury plan with liquidity forecast
 
 ## Development
 
