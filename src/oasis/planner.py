@@ -296,8 +296,10 @@ def validate_planning_inputs(inputs: dict[str, Any]) -> dict[str, Any]:
     }
 
     # Validate risk tolerance
-    if validated["risk_tolerance"] not in ["low", "medium", "high"]:
+    if validated["risk_tolerance"] not in ["low", "medium", "high", "conservative"]:
         validated["risk_tolerance"] = "medium"
+    elif validated["risk_tolerance"] == "conservative":
+        validated["risk_tolerance"] = "low"  # Map conservative to low risk
 
     # Validate inflow/outflow multipliers
     if "multiplier" in validated["expected_inflows"]:
