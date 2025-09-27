@@ -206,6 +206,15 @@ The hooks include:
 - **check-json** - Validates JSON files
 - **check-toml** - Validates TOML files
 
+## Phase 3 — Negotiation & Live Fee Bidding
+
+Treasury constraints influence negotiation.
+
+### Phase 3 — Negotiation & Live Fee Bidding
+- [ ] Feeds liquidity/treasury constraints into negotiation logic
+- [ ] Constraints visible via CE (ocn.oasis.constraint.v1)
+- [ ] Tests validating constraint-influenced outcomes
+
 ## License
 
 MIT License - see [LICENSE](LICENSE) file for details.

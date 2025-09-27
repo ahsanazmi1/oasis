@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "oasis"
-version = "0.2.0"
+version = "0.3.0"
 description = "Oasis service for the Open Checkout Network (OCN)"
 readme = "README.md"
 requires-python = ">=3.12"
