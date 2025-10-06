@@ -22,14 +22,15 @@ RUN pip install --no-cache-dir -e .
 # Copy application code
 COPY src/ ./src/
 COPY mcp/ ./mcp/
+COPY models/ ./models/
 
 # Expose port
-EXPOSE 8085
+EXPOSE 8084
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8085/health || exit 1
+    CMD curl -f http://localhost:8084/health || exit 1
 
 # Default command
-CMD ["uvicorn", "oasis.api:app", "--host", "0.0.0.0", "--port", "8085"]
+CMD ["uvicorn", "oasis.api:app", "--host", "0.0.0.0", "--port", "8084"]
 
